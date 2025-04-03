@@ -86,7 +86,7 @@ public class Shoot : Shoot_Data,I_Shoot
         _core.transform.rotation = Quaternion.Slerp(_core.transform.rotation, Quaternion.LookRotation(aimAt - _core.transform.position), Time.deltaTime * _turningSpeed);
     }
 
-    private void TryShoot()
+    public void TryShoot()
     {
         if (Time.time - lastFireTime >= _fireRate)
         {
@@ -94,6 +94,19 @@ public class Shoot : Shoot_Data,I_Shoot
             if (Vector3.Angle(directionToTarget, _gun.forward) < _angleTurningAccuracy)
             {
                 NormalShoot(_firePoint.position, _firePoint.forward);
+                lastFireTime = Time.time;
+            }
+        }
+    }
+
+    public void TrySecondary()
+    {
+        if (Time.time - lastFireTime >= _fireRate)
+        {
+            Vector3 directionToTarget = currentTarget.transform.position - _gun.position;
+            if (Vector3.Angle(directionToTarget, _gun.forward) < _angleTurningAccuracy)
+            {
+               SecondaryShoot(_firePoint.position, _firePoint.forward);
                 lastFireTime = Time.time;
             }
         }

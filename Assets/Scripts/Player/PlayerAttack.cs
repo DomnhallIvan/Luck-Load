@@ -27,6 +27,11 @@ public class PlayerAttack : Shoot_Data,I_Shoot
         }
     }
 
+    public void SecondaryShoot(Vector3 firePointPosition, Vector3 fireDirection)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void StrongShoot(Vector3 firePointPosition, Vector3 fireDirection)
     {
         throw new System.NotImplementedException();
