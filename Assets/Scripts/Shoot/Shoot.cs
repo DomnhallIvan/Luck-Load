@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Shoot : Shoot_Data,I_Shoot
 {
+    [SerializeField] private LayerMask groundMask;
+    private Camera mainCamera;
     private List<GameObject> _enemiesInRange = new List<GameObject>();
     private GameObject currentTarget;
     private ObjectPool bulletPool;
@@ -14,7 +16,12 @@ public class Shoot : Shoot_Data,I_Shoot
         bulletPool = FindObjectOfType<ObjectPool>();
     }
 
+    private void Start()
+    {
+        mainCamera = Camera.main;
+    }
 
+    /*
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("enemy"))
@@ -32,7 +39,7 @@ public class Shoot : Shoot_Data,I_Shoot
             currentTarget = null;
             UpdateTarget();
         }
-    }
+    }*/
 
     private void UpdateTarget()
     {
@@ -68,7 +75,43 @@ public class Shoot : Shoot_Data,I_Shoot
         {
             AimAtTarget();
             TryShoot();
+        }
+        else
+        {
+            AimPlayer();
+        }
+    }
 
+    private void AimPlayer()
+    {
+        var (success, position) = GetMousePosition();
+        if (success)
+        {
+            // Calculate the direction
+            var direction = position - transform.position;
+
+            // You might want to delete this line.
+            // Ignore the height difference.
+            direction.y = 0;
+
+            // Make the transform look in the direction.
+            transform.forward = direction;
+        }
+    }
+
+    private (bool success, Vector3 position) GetMousePosition()
+    {
+        var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, groundMask))
+        {
+            // The Raycast hit something, return with the position.
+            return (success: true, position: hitInfo.point);
+        }
+        else
+        {
+            // The Raycast did not hit anything.
+            return (success: false, position: Vector3.zero);
         }
     }
 
@@ -90,12 +133,10 @@ public class Shoot : Shoot_Data,I_Shoot
     {
         if (Time.time - lastFireTime >= _fireRate)
         {
-            Vector3 directionToTarget = currentTarget.transform.position - _gun.position;
-            if (Vector3.Angle(directionToTarget, _gun.forward) < _angleTurningAccuracy)
-            {
+           
                 NormalShoot(_firePoint.position, _firePoint.forward);
                 lastFireTime = Time.time;
-            }
+            
         }
     }
 
@@ -103,40 +144,44 @@ public class Shoot : Shoot_Data,I_Shoot
     {
         if (Time.time - lastFireTime >= _fireRate)
         {
-            Vector3 directionToTarget = currentTarget.transform.position - _gun.position;
-            if (Vector3.Angle(directionToTarget, _gun.forward) < _angleTurningAccuracy)
-            {
+           
                SecondaryShoot(_firePoint.position, _firePoint.forward);
                 lastFireTime = Time.time;
-            }
+            
         }
     }
 
-    private void FireBullet(Vector3 firePointPosition, Vector3 fireDirection)
+    public void NormalShoot(Vector3 firePointPosition, Vector3 fireDirection)
     {
-        GameObject fire = bulletPool.GetFromPool();
-        fire.transform.position = firePointPosition;
-        fire.transform.rotation = Quaternion.identity;
+        GameObject fireObject = bulletPool.GetFromPool("Bullet");
+        if( fireObject != null )
+        FireBullet(firePointPosition, fireDirection, fireObject);
+    }
 
-        Rigidbody bulletRB = fire.GetComponent<Rigidbody>();
+    public void SecondaryShoot(Vector3 firePointPosition, Vector3 fireDirection)
+    {
+        //Instead of Using prefabBullet it would use PrefabMisile
+        GameObject fireObject = bulletPool.GetFromPool("Missile");
+        if (fireObject != null)
+        FireBullet(firePointPosition, fireDirection,fireObject);   
+
+    }    
+
+    private void FireBullet(Vector3 firePointPosition, Vector3 fireDirection, GameObject fireObject)
+    {
+        
+        fireObject.transform.position = firePointPosition;
+        fireObject.transform.rotation = Quaternion.identity;
+
+        Rigidbody bulletRB = fireObject.GetComponent<Rigidbody>();
         if (bulletRB != null)
         {
             //Fix to reset angularVelocity and set the ForceMode.Impulse
             bulletRB.velocity = Vector3.zero;
             bulletRB.angularVelocity = Vector3.zero;
             bulletRB.AddForce(fireDirection * _bulletForce, ForceMode.Impulse);
-            fire.GetComponent<Projectile>().ReturnDamage(_damage);
+            fireObject.GetComponent<Projectile>().ReturnDamage(_damage);
         }
     }
 
-    public void SecondaryShoot(Vector3 firePointPosition, Vector3 fireDirection)
-    {
-        FireBullet(firePointPosition, fireDirection);   
-
-    }
-
-    public void NormalShoot(Vector3 firePointPosition, Vector3 fireDirection)
-    {
-        FireBullet(firePointPosition, fireDirection);
-    }
 }

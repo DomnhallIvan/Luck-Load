@@ -7,6 +7,7 @@ public class Projectile : ProjectileData
     [Header("Referencias")]
     public Rigidbody rb;
 
+
     private void Awake()
     {
         HurtLayer = LayerMask.NameToLayer("enemy");
@@ -17,7 +18,7 @@ public class Projectile : ProjectileData
 
     private void Start()
     {
-        GameManager.instance.onReset += ReturnToPool;
+       // GameManager.instance.onReset += ReturnToPool;
     }
 
     private void LateUpdate()
@@ -46,10 +47,12 @@ public class Projectile : ProjectileData
 
     private void ReturnToPool()
     {
+        //Can be reused for other variants of Bullets
         ObjectPool pool = FindObjectOfType<ObjectPool>();
         if (pool != null)
         {
-            pool.ReturnToPool(gameObject);
+            string tag = gameObject.tag; // Use the tag of this GameObject
+            pool.ReturnToPool(tag, gameObject);
         }
     }
 

@@ -219,6 +219,17 @@
                 },
                 {
                     "name": "",
+                    "id": "db9fc4a7-79f4-4b79-a6f2-c20f34e81595",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LightAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "31d63061-07cf-4590-8606-2edea41442ef",
                     "path": "<Gamepad>/buttonWest",
                     "interactions": "",
@@ -232,6 +243,17 @@
                     "name": "",
                     "id": "c21c55f0-f812-4aca-901d-664e99a0d276",
                     "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HeavyAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6e1461ab-05cc-4780-b300-65bda6faa846",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

@@ -4,25 +4,46 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
-    public GameObject prefab;
-    public int poolSize = 10;
+    [System.Serializable]
+    public class Pool
+    {
+        public string tag;         // Identifier for the object type (e.g., "Bullet", "Missile", "Enemy")
+        public GameObject prefab;  // Prefab to instantiate
+        public int size;           // Initial pool size
+    }
 
-    private Queue<GameObject> pool;
+    public List<Pool> pools;
+    private Dictionary<string, Queue<GameObject>> poolDictionary;
 
     private void Awake()
     {
-        pool = new Queue<GameObject>();
+        poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
-        for (int i = 0; i < poolSize; i++)
+        foreach (Pool pool in pools)
         {
-            GameObject obj = Instantiate(prefab);
-            obj.SetActive(false);
-            pool.Enqueue(obj);
+            Queue<GameObject> objectPool = new Queue<GameObject>();
+
+            for (int i = 0; i < pool.size; i++)
+            {
+                GameObject obj = Instantiate(pool.prefab);
+                obj.SetActive(false);
+                objectPool.Enqueue(obj);
+            }
+
+            poolDictionary.Add(pool.tag, objectPool);
         }
     }
 
-    public GameObject GetFromPool()
+    public GameObject GetFromPool(string tag)
     {
+        if (!poolDictionary.ContainsKey(tag))
+        {
+            Debug.LogWarning($"Object Pool: No pool found for tag '{tag}'");
+            return null;
+        }
+
+        Queue<GameObject> pool = poolDictionary[tag];
+
         if (pool.Count > 0)
         {
             GameObject obj = pool.Dequeue();
@@ -31,14 +52,21 @@ public class ObjectPool : MonoBehaviour
         }
         else
         {
-            GameObject obj = Instantiate(prefab);
-            return obj;
+            Debug.LogWarning($"Object Pool: Pool for '{tag}' is empty, consider increasing size.");
+            return null;
         }
     }
 
-    public void ReturnToPool(GameObject obj)
+    public void ReturnToPool(string tag, GameObject obj)
     {
+        if (!poolDictionary.ContainsKey(tag))
+        {
+            Debug.LogWarning($"Object Pool: No pool found for tag '{tag}', destroying object instead.");
+            Destroy(obj);
+            return;
+        }
+
         obj.SetActive(false);
-        pool.Enqueue(obj);
+        poolDictionary[tag].Enqueue(obj);
     }
 }

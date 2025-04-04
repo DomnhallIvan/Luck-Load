@@ -12,7 +12,7 @@ public class PlayerAttack : Shoot_Data,I_Shoot
 
     public void NormalShoot(Vector3 firePointPosition, Vector3 fireDirection)
     {
-        GameObject fire = bulletPool.GetFromPool();
+        GameObject fire = bulletPool.GetFromPool("Bullet");
         fire.transform.position = firePointPosition;
         fire.transform.rotation = Quaternion.identity;
 
