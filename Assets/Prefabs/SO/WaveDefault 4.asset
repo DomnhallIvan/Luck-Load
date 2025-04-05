@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82c20e1f84d82b34c90feeafc87341f2, type: 3}
+  m_Name: WaveDefault 4
+  m_EditorClassIdentifier: 
+  enemies:
+  - enemyPrefab: {fileID: 2253760053393878812, guid: 81af919c503d9d047956c5bffcb68d88, type: 3}
+    count: 20
+  spawnRate: 1

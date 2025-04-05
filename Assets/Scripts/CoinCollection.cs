@@ -7,18 +7,30 @@ public class CoinCollection : MonoBehaviour
 {
     private int Coin = 0;
     //[SerializeField] private TextMeshProUGUI _coinText;
-    [SerializeField] private UIInterface _uiReference;
+   // [SerializeField] private UIInterface _uiReference;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.tag == "Coin")
+        if (other.transform.tag == "Player")
         {
             Coin++;
 
-            _uiReference.SetScore(Coin, 0);
+            GameManager.instance.AddScoreCoins(1);
+            ReturnToPool();
             //_coinText.text="Coin: " + Coin.ToString();
             Debug.Log(Coin);
-            Destroy(other.gameObject);
+            //estroy(other.gameObject);
+        }
+    }
+
+    private void ReturnToPool()
+    {
+        //Can be reused for other variants of Bullets
+        ObjectPool pool = FindObjectOfType<ObjectPool>();
+        if (pool != null)
+        {
+            string tag = gameObject.tag; // Use the tag of this GameObject
+            pool.ReturnToPool(tag, gameObject);
         }
     }
 }

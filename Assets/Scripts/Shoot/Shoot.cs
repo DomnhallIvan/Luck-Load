@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Shoot : Shoot_Data,I_Shoot
 {
-    [SerializeField] private LayerMask groundMask;
-    private Camera mainCamera;
+  
     private List<GameObject> _enemiesInRange = new List<GameObject>();
     private GameObject currentTarget;
     private ObjectPool bulletPool;
@@ -16,10 +15,7 @@ public class Shoot : Shoot_Data,I_Shoot
         bulletPool = FindObjectOfType<ObjectPool>();
     }
 
-    private void Start()
-    {
-        mainCamera = Camera.main;
-    }
+   
 
     /*
     private void OnTriggerEnter(Collider other)
@@ -71,49 +67,14 @@ public class Shoot : Shoot_Data,I_Shoot
 
     private void LateUpdate()
     {
-        if (currentTarget != null&&!isPlayer)
+        if (currentTarget != null)
         {
             AimAtTarget();
             TryShoot();
         }
-        else
-        {
-            AimPlayer();
-        }
     }
 
-    private void AimPlayer()
-    {
-        var (success, position) = GetMousePosition();
-        if (success)
-        {
-            // Calculate the direction
-            var direction = position - transform.position;
-
-            // You might want to delete this line.
-            // Ignore the height difference.
-            direction.y = 0;
-
-            // Make the transform look in the direction.
-            transform.forward = direction;
-        }
-    }
-
-    private (bool success, Vector3 position) GetMousePosition()
-    {
-        var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, groundMask))
-        {
-            // The Raycast hit something, return with the position.
-            return (success: true, position: hitInfo.point);
-        }
-        else
-        {
-            // The Raycast did not hit anything.
-            return (success: false, position: Vector3.zero);
-        }
-    }
+   
 
     private void AimAtTarget()
     {

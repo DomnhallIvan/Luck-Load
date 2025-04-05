@@ -6,10 +6,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-   // public Player playerRef;
-    //public GameUI gameUI;
+    public PlayerController playerRef;
+    public UIInterface UIreference;
+    public GameUI gameUI;
     public System.Action onReset;
     public System.Action onStartGame;
+
+    [SerializeField] private PlayerHealth _playerHealth;
 
     private void Awake()
     {
@@ -23,17 +26,34 @@ public class GameManager : MonoBehaviour
             //onStartGame += OnStartGame;
         }
     }
-    /*
-    public void OnScoreZoneReached(int damage)
+
+    private void Start()
     {
-        playerRef.healthPoints -= damage;
-
-        gameUI.UpdateScores(playerRef.healthPoints);
-        gameUI.UpdateImage();
-
-        //CheckWin();
-        CheckDied();
+        _playerHealth.OnDeath += Die;
     }
+
+    private void Die(Vector3 Position)
+    {
+        gameUI.OnGameFailure();
+        onReset?.Invoke();
+        playerRef.isDead = true;
+    }
+
+    public void AddScoreEnemyD(int damage)
+    {
+        UIreference.SetScore(damage, 1);
+    }
+
+    public void AddScoreCoins(int damage)
+    {
+        UIreference.SetScore(damage, 0);
+    }
+
+    public void AddWaveCount(int Count)
+    {
+
+    }
+    /*
 
     private void CheckDied()
     {

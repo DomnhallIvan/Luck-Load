@@ -22,6 +22,7 @@ public class Health :MonoBehaviour,I_Damagable
 
     public void TakeDamage(int Damage)
     {
+        Debug.Log("Ouch"); 
         int damageTaken=Mathf.Clamp(Damage, 0, CurrentHealth);
 
         CurrentHealth-=damageTaken;

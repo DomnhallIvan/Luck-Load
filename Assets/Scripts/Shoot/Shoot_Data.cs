@@ -17,6 +17,6 @@ public class Shoot_Data : MonoBehaviour
     public float _fireRate = 1.2f;
     public float _bulletForce = 200;
     public Transform _firePoint;
-    public bool isPlayer;
+    //public bool isPlayer;
 
 }

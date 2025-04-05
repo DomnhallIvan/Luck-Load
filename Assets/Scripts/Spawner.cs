@@ -42,7 +42,7 @@ public class Spawner : MonoBehaviour
         {
             if (enemy != null)
             {
-               // enemy.GetComponent<EnemyController>().KillEnemy();
+                enemy.GetComponent<Enemy>().ReturnToPool();
             }
         }
         activeEnemies.Clear();

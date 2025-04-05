@@ -5,32 +5,50 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public S_Stats playerStats;
-    //public float speed=5f;
-    private Vector2 move;
+    [SerializeField] private PlayerInputController _inputController;
+    [SerializeField] private PlayerMovement _playerMovement;
+    [SerializeField] private PlayerAttack _playerAttack;
+    [SerializeField] private PlayerInteraction _playerInteraction;
+    public bool isDead;
+
+    private void OnDestroy() => UnsubscribeEvents();
 
     private void Start()
     {
-        playerStats = new S_Stats(100, 100, 12, 3, 1.2f, 5, 20);
+        SuscribeEvents();
+        //_playerHealth.OnDeath += Die;
     }
 
-    public void OnMove(InputAction.CallbackContext callbackContext)
-    {
-        move = callbackContext.ReadValue<Vector2>();
-    }
+    
 
     private void Update()
     {
-        MovePlayer();
+        if (!isDead)
+        _playerMovement.MovePlayer(_inputController.MoveInput);
     }
 
-    public void MovePlayer()
+    private void SuscribeEvents()
     {
-        Vector3 movement = new Vector3(move.x, 0f, move.y);
+        //_inputController.OnInteract+=
+        _inputController.OnAttack += HandlePrimaryShoot;
+        _inputController.OnSecondaryAttack += HandleSecondaryShoot;
+    }
 
-        if(movement != Vector3.zero)
-        //transform.rotation=Quaternion.Slerp(transform.rotation,Quaternion.LookRotation(movement),0.15f);
-       
-        transform.Translate(movement * playerStats.speed * Time.deltaTime, Space.World);
+    private void UnsubscribeEvents()
+    {
+        _inputController.OnAttack -= HandlePrimaryShoot;
+        _inputController.OnSecondaryAttack -= HandleSecondaryShoot;
+    }
+
+    private void HandlePrimaryShoot()
+    {
+        if (!isDead)
+            _playerAttack.TryShoot();
+    }
+
+    private void HandleSecondaryShoot()
+    {
+        if (!isDead)
+            _playerAttack.TrySecondary();
     }
 }
