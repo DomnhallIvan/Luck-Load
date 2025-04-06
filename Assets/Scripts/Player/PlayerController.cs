@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerAttack _playerAttack;
     [SerializeField] private PlayerInteraction _playerInteraction;
     public bool isDead;
+    public int scoreCoins;
+    public int scoreEnemy;
+    public int waveCount;
 
     private void OnDestroy() => UnsubscribeEvents();
 
@@ -19,12 +22,19 @@ public class PlayerController : MonoBehaviour
         //_playerHealth.OnDeath += Die;
     }
 
-    
+    public void ResetStats()
+    {
+        scoreCoins = 0;
+        scoreEnemy = 0;
+
+        waveCount = 0;
+    }
 
     private void Update()
     {
         if (!isDead)
         _playerMovement.MovePlayer(_inputController.MoveInput);
+        _playerAttack.AimPlayer();
     }
 
     private void SuscribeEvents()

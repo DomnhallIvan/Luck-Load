@@ -18,6 +18,7 @@ public class LevelManager : MonoBehaviour
     {
         GameManager.instance.onStartGame += StartGame;
         GameManager.instance.onReset += EndGame;
+        GameManager.instance.onNextRound += StartNextWave;
     }
 
     /*
@@ -48,7 +49,9 @@ public class LevelManager : MonoBehaviour
             isSpawning = false;
             //reset the timer
             _timer = waveSpawnInterval;
-
+            //OpenTheShopMenu
+            GameManager.instance.OpenMenu();
+            
             // Check if all waves are completed and all enemies are dead
             if (_currentWave >= waves.Count)
             {
@@ -59,24 +62,28 @@ public class LevelManager : MonoBehaviour
 
     void StartNextWave()
     {
+        GameManager.instance.AddWaveCount(1);
+
         if (_currentWave < waves.Count)
         {
             WaveSO waveConfig = waves[_currentWave];
             _currentWave++;
-
             _spawnerRef.StartNextWave(waveConfig);
             _enemiesRemaining = GetTotalEnemies(waveConfig);
             isSpawning = true;
         }
         else
         {
-            _currentWave = 0;
+            // Stay on the last wave
+            _currentWave = waves.Count - 1;
+
             WaveSO waveConfig = waves[_currentWave];
             _spawnerRef.StartNextWave(waveConfig);
             _enemiesRemaining = GetTotalEnemies(waveConfig);
             isSpawning = true;
         }
     }
+
 
     private int GetTotalEnemies(WaveSO waveConfig)
     {
@@ -100,6 +107,7 @@ public class LevelManager : MonoBehaviour
         _currentWave = 0;   // Reset wave count
         _enemiesRemaining = 0;  // Reset enemy count
         isSpawning = false;
+        StartNextWave();
     }
 
     void EndGame()

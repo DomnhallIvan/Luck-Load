@@ -5,12 +5,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-
     public PlayerController playerRef;
+    public PlayerHealth playerHealthRef;
     public UIInterface UIreference;
     public GameUI gameUI;
     public System.Action onReset;
     public System.Action onStartGame;
+    public System.Action onNextRound;
 
     [SerializeField] private PlayerHealth _playerHealth;
 
@@ -23,7 +24,8 @@ public class GameManager : MonoBehaviour
         else
         {
             instance = this;
-            //onStartGame += OnStartGame;
+            onStartGame += OnStartGame;
+            playerHealthRef.OnDeath += Die;
         }
     }
 
@@ -32,8 +34,19 @@ public class GameManager : MonoBehaviour
         _playerHealth.OnDeath += Die;
     }
 
+    public void OnStartGame()
+    {
+        playerRef.isDead = false;
+        playerRef.ResetStats();
+        playerHealthRef.SetCurrentHealth();
+        playerHealthRef.SetCurrentShiled();
+        playerHealthRef.SetCurrentRegen();
+        //gameUI.UpdateScores(playerRef.healthPoints);
+    }
+
     private void Die(Vector3 Position)
     {
+        Debug.Log("Quack");
         gameUI.OnGameFailure();
         onReset?.Invoke();
         playerRef.isDead = true;
@@ -41,17 +54,33 @@ public class GameManager : MonoBehaviour
 
     public void AddScoreEnemyD(int damage)
     {
-        UIreference.SetScore(damage, 1);
+        
+        playerRef.scoreEnemy += damage;
+        UIreference.SetScore(playerRef.scoreEnemy, 1);
     }
 
     public void AddScoreCoins(int damage)
     {
-        UIreference.SetScore(damage, 0);
-    }
+        playerRef.scoreCoins += damage;
+        UIreference.SetScore(playerRef.scoreCoins, 0);
+    }    
 
     public void AddWaveCount(int Count)
     {
+        playerRef.waveCount += Count;
+        UIreference.SetWave(playerRef.waveCount);
+    }
 
+    //Gets Called from Shopping
+    public void OpenMenu()
+    {
+        gameUI.OpenShopMenu();
+    }
+
+ 
+    public void ChangeCoinValue()
+    {
+        UIreference.SetScore(playerRef.scoreCoins, 0);
     }
     /*
 

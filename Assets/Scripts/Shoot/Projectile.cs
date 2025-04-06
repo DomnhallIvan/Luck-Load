@@ -10,7 +10,7 @@ public class Projectile : ProjectileData
 
     private void Awake()
     {
-        HurtLayer = LayerMask.NameToLayer("enemy");
+        //HurtLayer = LayerMask.NameToLayer("enemy");
         //playerLayer = LayerMask.NameToLayer("turret");
         endZoneLayer = LayerMask.NameToLayer("endzone");
         //gameManager = FindObjectOfType<GameManager>();
@@ -18,7 +18,7 @@ public class Projectile : ProjectileData
 
     private void Start()
     {
-       // GameManager.instance.onReset += ReturnToPool;
+        GameManager.instance.onReset += ReturnToPool;
     }
 
     private void LateUpdate()
@@ -61,5 +61,10 @@ public class Projectile : ProjectileData
     {
         damage = setdamage;
         return damage;
+    }
+
+    public void SetHurtLayer(int layer)
+    {
+        HurtLayer = layer;
     }
 }

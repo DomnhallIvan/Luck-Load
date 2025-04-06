@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
     private void Die(Vector3 Position)
     {
 
-        Debug.Log("Elpepe");
+        //Debug.Log("Elpepe");
         // Movement.StopMoving();
         GameManager.instance.AddScoreEnemyD(15);
        ReturnToPool();

@@ -11,11 +11,15 @@ public class PlayerAttack : Shoot_Data,I_Shoot
     private ObjectPool bulletPool;
     private float lastFireTime = 0f;
     [SerializeField] private float _fireRate2=1.5f;
-    public int AmmoMisiles = 2;
+    public int originalMaxMissiles;
+    public int maxMissiles = 2;
+    public int ammoMisiles;
 
     private void Start()
     {
         mainCamera = Camera.main;
+        originalMaxMissiles=maxMissiles ;
+        ammoMisiles = maxMissiles;
     }
 
     private void Awake()
@@ -25,10 +29,10 @@ public class PlayerAttack : Shoot_Data,I_Shoot
 
     private void Update()
     {
-        AimPlayer();
+       // AimPlayer();
     }
 
-    private void AimPlayer()
+    public void AimPlayer()
     {
         var (success, position) = GetMousePosition();
         if (success)
@@ -76,8 +80,8 @@ public class PlayerAttack : Shoot_Data,I_Shoot
     {
         if (Time.time - lastFireTime >= _fireRate2)
         {
-            AmmoMisiles--;
-            if (AmmoMisiles > 0)
+            ammoMisiles--;
+            if (ammoMisiles > 0)
             SecondaryShoot(_firePoint.position, _firePoint.forward);
             lastFireTime = Time.time;
 
@@ -103,17 +107,34 @@ public class PlayerAttack : Shoot_Data,I_Shoot
     private void FireBullet(Vector3 firePointPosition, Vector3 fireDirection, GameObject fireObject)
     {
 
+
         fireObject.transform.position = firePointPosition;
         fireObject.transform.rotation = Quaternion.identity;
 
         Rigidbody bulletRB = fireObject.GetComponent<Rigidbody>();
         if (bulletRB != null)
         {
-            //Fix to reset angularVelocity and set the ForceMode.Impulse
             bulletRB.velocity = Vector3.zero;
             bulletRB.angularVelocity = Vector3.zero;
             bulletRB.AddForce(fireDirection * _bulletForce, ForceMode.Impulse);
-            fireObject.GetComponent<Projectile>().ReturnDamage(_damage);
+
+            Projectile projectile = fireObject.GetComponent<Projectile>();
+            if (projectile != null)
+            {
+                projectile.ReturnDamage(_damage);
+                projectile.SetHurtLayer(LayerMask.NameToLayer("enemy")); // or "enemy", "turret" etc.
+            }
         }
+    }
+
+    public void RechargeMissiles()
+    {
+        ammoMisiles = maxMissiles;
+    }
+
+    public void MoreMissiles(int Quantity)
+    {
+        maxMissiles += Quantity;
+        ammoMisiles += Quantity;
     }
 }

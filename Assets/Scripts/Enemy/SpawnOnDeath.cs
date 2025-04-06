@@ -9,10 +9,18 @@ public class SpawnOnDeath : MonoBehaviour
     //[SerializeField] private GameObject _deathObject;
     private ObjectPool coinPool;
     public I_Damagable Damagable;
+    [SerializeField] private LevelManager _levelManager;
 
     private void Awake()
     {
         Damagable=GetComponent<I_Damagable>();
+
+    }
+
+    private void Start()
+    {
+        coinPool = FindObjectOfType<ObjectPool>();
+        _levelManager = FindObjectOfType<LevelManager>();
     }
 
     private void OnEnable()
@@ -22,6 +30,7 @@ public class SpawnOnDeath : MonoBehaviour
 
     private void Damageable_OnDeath(Vector3 Position)
     {
+        _levelManager.EnemyDestroyed();
         int chance = Random.Range(0, 4);
         if (chance == 0)
         {

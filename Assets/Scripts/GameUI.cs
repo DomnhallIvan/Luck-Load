@@ -7,21 +7,34 @@ public class GameUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI winText;
     [SerializeField] private Canvas menuCanvas;
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Canvas shopCanvas;
+    //[SerializeField] private Canvas _uiCanvas;
+
+    //SI le da clcik el evento onStartGame se invoca
+    public void OnStartGameButtonClicked()
     {
-        
+        menuCanvas.enabled = false;
+        //_uiCanvas.enabled = true;
+       // ResetImage();
+        GameManager.instance.onStartGame?.Invoke();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void OnGameFailure()
     {
         menuCanvas.enabled = true;
-        winText.text = " THE ZOMBIES ATE YOUR BRAINS";
+        //_uiCanvas.enabled= false;
+        winText.text = " YOU ARE DEAD NOT BIG SURPRISE";
+    }
+
+    public void OpenShopMenu()
+    {
+        shopCanvas.enabled = true;
+    }
+
+    public void CloseShopMenu()
+    {
+        shopCanvas.enabled = false;
+        GameManager.instance.onNextRound?.Invoke();
     }
 }

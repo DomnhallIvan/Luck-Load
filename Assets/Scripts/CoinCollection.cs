@@ -5,20 +5,21 @@ using UnityEngine;
 
 public class CoinCollection : MonoBehaviour
 {
-    private int Coin = 0;
-    //[SerializeField] private TextMeshProUGUI _coinText;
+    //Remplazar por un int del Player
+    [SerializeField]private int coinvalue = 1;
+    ////[SerializeField] private TextMeshProUGUI _coinText;
    // [SerializeField] private UIInterface _uiReference;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.tag == "Player")
         {
-            Coin++;
+           // Coin++;
 
-            GameManager.instance.AddScoreCoins(1);
+            GameManager.instance.AddScoreCoins(coinvalue);
             ReturnToPool();
             //_coinText.text="Coin: " + Coin.ToString();
-            Debug.Log(Coin);
+            //Debug.Log(Coin);
             //estroy(other.gameObject);
         }
     }

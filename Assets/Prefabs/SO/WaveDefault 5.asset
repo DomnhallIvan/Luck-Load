@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82c20e1f84d82b34c90feeafc87341f2, type: 3}
-  m_Name: WaveDefault 1
+  m_Name: WaveDefault 5
   m_EditorClassIdentifier: 
   enemies:
   - enemyPrefab: {fileID: 2253760053393878812, guid: 81af919c503d9d047956c5bffcb68d88, type: 3}
-    count: 6
-  spawnRate: 0.3
+    count: 25
+  spawnRate: 1

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public List<Transform> wayPoints;
+    //public List<Transform> wayPoints;
 
     private WaveSO currentWave;
     private int _currentenemycount = 0;

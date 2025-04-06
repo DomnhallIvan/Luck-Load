@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Shoot : Shoot_Data,I_Shoot
-{
-  
+{   
     private List<GameObject> _enemiesInRange = new List<GameObject>();
     private GameObject currentTarget;
     private ObjectPool bulletPool;
@@ -14,13 +13,10 @@ public class Shoot : Shoot_Data,I_Shoot
     {
         bulletPool = FindObjectOfType<ObjectPool>();
     }
-
-   
-
-    /*
+    
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("enemy"))
+        if (other.gameObject.CompareTag("Player"))
         {
             _enemiesInRange.Add(other.gameObject);
             UpdateTarget();
@@ -29,13 +25,13 @@ public class Shoot : Shoot_Data,I_Shoot
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("enemy"))
+        if (other.gameObject.CompareTag("Player"))
         {
             _enemiesInRange.Remove(other.gameObject);
             currentTarget = null;
             UpdateTarget();
         }
-    }*/
+    }
 
     private void UpdateTarget()
     {
@@ -69,7 +65,7 @@ public class Shoot : Shoot_Data,I_Shoot
     {
         if (currentTarget != null)
         {
-            AimAtTarget();
+            //AimAtTarget();
             TryShoot();
         }
     }
@@ -130,18 +126,23 @@ public class Shoot : Shoot_Data,I_Shoot
 
     private void FireBullet(Vector3 firePointPosition, Vector3 fireDirection, GameObject fireObject)
     {
-        
+
         fireObject.transform.position = firePointPosition;
         fireObject.transform.rotation = Quaternion.identity;
 
         Rigidbody bulletRB = fireObject.GetComponent<Rigidbody>();
         if (bulletRB != null)
         {
-            //Fix to reset angularVelocity and set the ForceMode.Impulse
             bulletRB.velocity = Vector3.zero;
             bulletRB.angularVelocity = Vector3.zero;
             bulletRB.AddForce(fireDirection * _bulletForce, ForceMode.Impulse);
-            fireObject.GetComponent<Projectile>().ReturnDamage(_damage);
+
+            Projectile projectile = fireObject.GetComponent<Projectile>();
+            if (projectile != null)
+            {
+                projectile.ReturnDamage(_damage);
+                projectile.SetHurtLayer(LayerMask.NameToLayer("Player")); // or "enemy", "turret" etc.
+            }
         }
     }
 
